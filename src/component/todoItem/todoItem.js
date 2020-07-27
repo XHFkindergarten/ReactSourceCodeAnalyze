@@ -28,7 +28,7 @@ class TodoItem extends React.Component {
           className="todoitem_checkbox"
           type="checkbox"
           checked={itemChecked}
-          onClick={this.toggleComplete}
+          onChange={this.toggleComplete}
         />
         <div className="todoitem_task">{task}</div>
         <div
