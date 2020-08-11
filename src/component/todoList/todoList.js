@@ -3,6 +3,9 @@ import './todoList.css';
 import TodoItem from '../todoItem/todoItem';
 
 class TodoList extends React.Component {
+  static defaultProps = {
+    name: 'test'
+  }
   render() {
     const taskList = this.props.data.map(function(listItem) {
       return (

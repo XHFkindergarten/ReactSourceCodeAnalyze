@@ -328,9 +328,11 @@ export function createElement(type, config, children) {
       key = '' + config.key;
     }
 
+    // source为jsx编译时会传入文件名和行数
     self = config.__self === undefined ? null : config.__self;
     source = config.__source === undefined ? null : config.__source;
     // Remaining properties are added to a new props object
+    // 除了self和source等属性
     for (propName in config) {
       if (
         hasOwnProperty.call(config, propName) &&
@@ -359,7 +361,7 @@ export function createElement(type, config, children) {
     props.children = childArray;
   }
 
-  // Resolve default props
+  // 解析静态属性
   if (type && type.defaultProps) {
     const defaultProps = type.defaultProps;
     for (propName in defaultProps) {

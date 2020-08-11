@@ -9,6 +9,8 @@ import warningWithoutStack from 'shared/warningWithoutStack';
 
 const didWarnStateUpdateForUnmountedComponent = {};
 
+// 在完成挂载之前，这四个方法都没有实质性的内容，只是会在控制台中发出警告，通知当前组件并不在Dom中，没有更新的能力
+
 function warnNoop(publicInstance, callerName) {
   if (__DEV__) {
     const constructor = publicInstance.constructor;
@@ -33,11 +35,12 @@ function warnNoop(publicInstance, callerName) {
 }
 
 /**
+ * 组件更新队列使用的4个静态API
  * This is the abstract API for an update queue.
  */
 const ReactNoopUpdateQueue = {
   /**
-   * Checks whether or not this composite component is mounted.
+   * 检查复合组件是否已经挂载
    * @param {ReactClass} publicInstance The instance we want to test.
    * @return {boolean} True if mounted, false otherwise.
    * @protected

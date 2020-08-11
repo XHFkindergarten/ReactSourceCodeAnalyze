@@ -554,8 +554,6 @@ function legacyCreateRootFromDOMContainer(
       );
     }
   }
-
-  // Legacy roots are not batched.
   return new ReactSyncRoot(
     container,
     LegacyRoot,
@@ -585,6 +583,8 @@ function legacyRenderSubtreeIntoContainer(
   let fiberRoot;
   if (!root) {
     // Initial mount
+    // 初始化root fiber 节点
+    // 根据挂载的dom生成一个root类型，能够挂载某些信息
     root = container._reactRootContainer = legacyCreateRootFromDOMContainer(
       container,
       forceHydrate,
@@ -592,16 +592,18 @@ function legacyRenderSubtreeIntoContainer(
     fiberRoot = root._internalRoot;
     if (typeof callback === 'function') {
       const originalCallback = callback;
+      // 向回调函数中传入fiberRoot实例
       callback = function() {
         const instance = getPublicRootInstance(fiberRoot);
         originalCallback.call(instance);
       };
     }
-    // Initial mount should not be batched.
+    // 初次挂载是不应该batch的
     unbatchedUpdates(() => {
       updateContainer(children, fiberRoot, parentComponent, callback);
     });
   } else {
+    // @todo 非首次渲染
     fiberRoot = root._internalRoot;
     if (typeof callback === 'function') {
       const originalCallback = callback;

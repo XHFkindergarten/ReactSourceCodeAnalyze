@@ -2,7 +2,13 @@ import React from 'react'
 import './todoForm.css';
 
 class TodoForm extends React.Component {
+  state = {
+    value: 0
+  }
   submitTask = e => {
+    this.setState({
+      value: this.state.value + 1
+    })
     e.preventDefault();
     const task = this.task.value.trim();
     if (!task) {
@@ -13,11 +19,13 @@ class TodoForm extends React.Component {
   };
 
   render() {
+    const { value } = this.state
     return (
       <div>
+        {value}
         <hr />
         <div className="todoform">
-          <label for="task" className="todoform_label">
+          <label htmlFor="task" className="todoform_label">
             Task
           </label>
           <input

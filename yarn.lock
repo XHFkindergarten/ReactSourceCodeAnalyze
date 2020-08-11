@@ -4116,6 +4116,11 @@ escodegen@^1.11.0, escodegen@^1.9.1:
   optionalDependencies:
     source-map "~0.6.1"
 
+eslint-config-fbjs@^3.1.1:
+  version "3.1.1"
+  resolved "http://registry.m.jd.com/eslint-config-fbjs/download/eslint-config-fbjs-3.1.1.tgz#f5b4c1df888693672116f000527a8df25d61b888"
+  integrity sha1-9bTB34iGk2chFvAAUnqN8l1huIg=
+
 eslint-config-react-app@^5.2.0:
   version "5.2.1"
   resolved "http://registry.m.jd.com/eslint-config-react-app/download/eslint-config-react-app-5.2.1.tgz#698bf7aeee27f0cea0139eaef261c7bf7dd623df"

@@ -28,6 +28,8 @@ function Component(props, context, updater) {
   this.updater = updater || ReactNoopUpdateQueue;
 }
 
+// 放在原型链中，用来判断实例[type/ElementType]是否是一个Component组件
+
 Component.prototype.isReactComponent = {};
 
 /**

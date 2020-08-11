@@ -155,7 +155,6 @@ function scheduleRootUpdate(
       );
     }
   }
-
   const update = createUpdate(expirationTime, suspenseConfig);
   // Caution: React DevTools currently depends on this property
   // being called "element".

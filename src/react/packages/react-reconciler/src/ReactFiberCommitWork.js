@@ -943,8 +943,7 @@ function commitContainer(finishedWork: Fiber) {
       const portalOrRoot: {
         containerInfo: Container,
         pendingChildren: ChildSet,
-      } =
-        finishedWork.stateNode;
+      } = finishedWork.stateNode;
       const {containerInfo, pendingChildren} = portalOrRoot;
       replaceContainerChildren(containerInfo, pendingChildren);
       return;
@@ -1032,7 +1031,6 @@ function commitPlacement(finishedWork: Fiber): void {
   if (!supportsMutation) {
     return;
   }
-
   // Recursively insert all host nodes into the parent.
   const parentFiber = getHostParentFiber(finishedWork);
 

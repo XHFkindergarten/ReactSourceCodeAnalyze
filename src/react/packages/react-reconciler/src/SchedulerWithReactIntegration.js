@@ -13,7 +13,6 @@ import * as Scheduler from 'scheduler';
 import {__interactionsRef} from 'scheduler/tracing';
 import {enableSchedulerTracing} from 'shared/ReactFeatureFlags';
 import invariant from 'shared/invariant';
-
 const {
   unstable_runWithPriority: Scheduler_runWithPriority,
   unstable_scheduleCallback: Scheduler_scheduleCallback,

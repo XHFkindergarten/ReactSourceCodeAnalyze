@@ -14,6 +14,7 @@ import type {ReactPriorityLevel} from './SchedulerWithReactIntegration';
 import type {Interaction} from 'scheduler/src/Tracing';
 import type {SuspenseConfig} from './ReactFiberSuspenseConfig';
 import type {SuspenseState} from './ReactFiberSuspenseComponent';
+import lodash from 'lodash'
 
 import {
   warnAboutDeprecatedLifecycles,
@@ -382,13 +383,14 @@ export function computeUniqueAsyncExpiration(): ExpirationTime {
   return result;
 }
 
+// 在Fiber上计划update于Schedule中
 export function scheduleUpdateOnFiber(
   fiber: Fiber,
   expirationTime: ExpirationTime,
 ) {
+  const body = document.querySelector('#root')
   checkForNestedUpdates();
   warnAboutInvalidUpdatesOnClassComponentsInDEV(fiber);
-
   const root = markUpdateTimeFromFiberToRoot(fiber, expirationTime);
   if (root === null) {
     warnAboutUpdateOnUnmountedFiberInDEV(fiber);
@@ -398,17 +400,17 @@ export function scheduleUpdateOnFiber(
   checkForInterruption(fiber, expirationTime);
   recordScheduleUpdate();
 
-  // TODO: computeExpirationForFiber also reads the priority. Pass the
-  // priority as an argument to that function and this one.
+  // 获取当前fiber的更新优先级
   const priorityLevel = getCurrentPriorityLevel();
 
   if (expirationTime === Sync) {
     if (
-      // Check if we're inside unbatchedUpdates
+      // 确认这一次update是还没有被batch的
       (executionContext & LegacyUnbatchedContext) !== NoContext &&
-      // Check if we're not already rendering
+      // 确认我们并不在render过程中
       (executionContext & (RenderContext | CommitContext)) === NoContext
     ) {
+      // 将发生中的交互存储在根节点防止已经追踪到的交互信息丢失
       // Register pending interactions on the root to avoid losing traced interaction data.
       schedulePendingInteractions(root, expirationTime);
 
@@ -989,13 +991,14 @@ function finishConcurrentRender(
   }
 }
 
-// This is the entry point for synchronous tasks that don't go
-// through Scheduler
+// **对于不需要进入Schdule的同步任务将通过这个函数来执行
 function performSyncWorkOnRoot(root) {
+  // 检查root上是否有过期的任务，否则，开始同步渲染
   // Check if there's expired work on this root. Otherwise, render at Sync.
   const lastExpiredTime = root.lastExpiredTime;
   const expirationTime = lastExpiredTime !== NoWork ? lastExpiredTime : Sync;
   if (root.finishedExpirationTime === expirationTime) {
+    // 如果在当前有效时间内已经有一个待提交的commit了，先进行提交
     // There's already a pending commit at this expiration time.
     // TODO: This is poorly factored. This case only exists for the
     // batch.commit() API.
@@ -1008,6 +1011,7 @@ function performSyncWorkOnRoot(root) {
 
     flushPassiveEffects();
 
+    // 如果root活着expiration time 改变了，我们需要放弃之前已经存在的执行栈而使用一个全新的，否则将从上次的位置继续执行
     // If the root or expiration time have changed, throw out the existing stack
     // and prepare a fresh one. Otherwise we'll continue where we left off.
     if (
@@ -1017,7 +1021,7 @@ function performSyncWorkOnRoot(root) {
       prepareFreshStack(root, expirationTime);
       startWorkOnPendingInteractions(root, expirationTime);
     }
-
+    // 如果我们有一个work-in-progress的fiber，那么意味着我们还有工作要做
     // If we have a work-in-progress fiber, it means there's still work to do
     // in this root.
     if (workInProgress !== null) {
@@ -1052,6 +1056,7 @@ function performSyncWorkOnRoot(root) {
       }
 
       if (workInProgress !== null) {
+        // 同步加载，我们应该完成一整棵fiber树
         // This is a sync render, so we should have finished the whole tree.
         invariant(
           false,
@@ -1062,10 +1067,13 @@ function performSyncWorkOnRoot(root) {
         // We now have a consistent tree. Because this is a sync render, we
         // will commit it even if something suspended. The only exception is
         // if the root is locked (using the unstable_createBatch API).
+        // 停止所有工作循环的监听器
         stopFinishedWorkLoopTimer();
         root.finishedWork = (root.current.alternate: any);
+        // 根节点的完成时间
         root.finishedExpirationTime = expirationTime;
         resolveLocksOnRoot(root, expirationTime);
+        // ** 真正的工作，render
         finishSyncRender(root, workInProgressRootExitStatus, expirationTime);
       }
 
@@ -1514,7 +1522,10 @@ function workLoopConcurrent() {
   }
 }
 
+// 核心方法，遍历fiber节点
 function performUnitOfWork(unitOfWork: Fiber): Fiber | null {
+  // 当前暴露出来的是这个alternate对象，理想情况下不需要依赖这个对象，但是通过使用它
+  // 意味着我们不需要在diff过程中再创建一个额外的变量（field)
   // The current, flushed, state of this fiber is the alternate. Ideally
   // nothing should rely on this, but relying on it here means that we don't
   // need an additional field on the work in progress.
@@ -1751,6 +1762,7 @@ function resetChildExpirationTime(completedWork: Fiber) {
   completedWork.childExpirationTime = newChildExpirationTime;
 }
 
+// 提交根节点
 function commitRoot(root) {
   const renderPriorityLevel = getCurrentPriorityLevel();
   runWithPriority(
@@ -1761,9 +1773,9 @@ function commitRoot(root) {
 }
 
 function commitRootImpl(root, renderPriorityLevel) {
+  // 刷新被动的effects
   flushPassiveEffects();
   flushRenderPhaseStrictModeWarningsInDEV();
-
   invariant(
     (executionContext & (RenderContext | CommitContext)) === NoContext,
     'Should not already be working.',
@@ -2095,6 +2107,7 @@ function commitBeforeMutationEffects() {
   }
 }
 
+// 真正的改写dom的步骤
 function commitMutationEffects(root: FiberRoot, renderPriorityLevel) {
   // TODO: Should probably move the bulk of this function to commitWork.
   while (nextEffect !== null) {
@@ -2688,6 +2701,7 @@ if (__DEV__ && replayFailedUnitOfWorkWithInvokeGuardedCallback) {
         startProfilerTimer(unitOfWork);
       }
 
+      // 递归
       // Run beginWork again.
       invokeGuardedCallback(
         null,

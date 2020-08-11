@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import './todoBox.css';
 import TodoForm from '../todoForm/todoForm';
 import TodoList from '../todoList/todoList';
@@ -13,11 +13,7 @@ const initialItem = {
 
 export default function TodoBox () {
   // 初始数据
-  const [ list, setList ] = useState([{
-    id: 1,
-    task: 'new todo',
-    complete: false
-  }])
+  const [ list, setList ] = useState([initialItem])
   
   // 删除任务
   const handleTaskDelete = id => {
