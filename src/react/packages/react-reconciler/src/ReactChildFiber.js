@@ -296,6 +296,7 @@ function ChildReconciler(shouldTrackSideEffects) {
     return null;
   }
 
+  // 根据所有fiber节点的key生成一个扁平化的Map
   function mapRemainingChildren(
     returnFiber: Fiber,
     currentFirstChild: Fiber,
@@ -1135,6 +1136,7 @@ function ChildReconciler(shouldTrackSideEffects) {
     element: ReactElement,
     expirationTime: ExpirationTime,
   ): Fiber {
+    console.warn('newChild', element)
     const key = element.key;
     let child = currentFirstChild;
     while (child !== null) {
@@ -1143,6 +1145,7 @@ function ChildReconciler(shouldTrackSideEffects) {
       if (child.key === key) {
         if (
           child.tag === Fragment
+            // 这里写错了，应该是element.$$typeof，type是函数实体
             ? element.type === REACT_FRAGMENT_TYPE
             : child.elementType === element.type ||
               // Keep this check inline so it only runs on the false path:

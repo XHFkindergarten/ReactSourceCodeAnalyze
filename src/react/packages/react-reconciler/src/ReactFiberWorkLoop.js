@@ -388,7 +388,6 @@ export function scheduleUpdateOnFiber(
   fiber: Fiber,
   expirationTime: ExpirationTime,
 ) {
-  const body = document.querySelector('#root')
   checkForNestedUpdates();
   warnAboutInvalidUpdatesOnClassComponentsInDEV(fiber);
   const root = markUpdateTimeFromFiberToRoot(fiber, expirationTime);
@@ -405,9 +404,9 @@ export function scheduleUpdateOnFiber(
 
   if (expirationTime === Sync) {
     if (
-      // 确认这一次update是还没有被batch的
+      // 不batch
       (executionContext & LegacyUnbatchedContext) !== NoContext &&
-      // 确认我们并不在render过程中
+      // 既不在render也不在commit阶段
       (executionContext & (RenderContext | CommitContext)) === NoContext
     ) {
       // 将发生中的交互存储在根节点防止已经追踪到的交互信息丢失
@@ -1008,10 +1007,9 @@ function performSyncWorkOnRoot(root) {
       (executionContext & (RenderContext | CommitContext)) === NoContext,
       'Should not already be working.',
     );
-
     flushPassiveEffects();
 
-    // 如果root活着expiration time 改变了，我们需要放弃之前已经存在的执行栈而使用一个全新的，否则将从上次的位置继续执行
+    // 如果root或者expiration time 改变了，我们需要放弃之前已经存在的执行栈而使用一个全新的，否则将从上次的位置继续执行
     // If the root or expiration time have changed, throw out the existing stack
     // and prepare a fresh one. Otherwise we'll continue where we left off.
     if (
@@ -1033,6 +1031,7 @@ function performSyncWorkOnRoot(root) {
 
       do {
         try {
+          //
           workLoopSync();
           break;
         } catch (thrownValue) {

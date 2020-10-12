@@ -208,6 +208,7 @@ if (__DEV__) {
   didWarnAboutDefaultPropsOnFunctionComponent = {};
 }
 
+// @todo
 export function reconcileChildren(
   current: Fiber | null,
   workInProgress: Fiber,
@@ -901,6 +902,7 @@ function pushHostRootContext(workInProgress) {
     // Should always be set
     pushTopLevelContextObject(workInProgress, root.context, false);
   }
+  console.warn('containerInfo', root.containerInfo)
   pushHostContainer(workInProgress, root.containerInfo);
 }
 

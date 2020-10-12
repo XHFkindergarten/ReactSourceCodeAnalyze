@@ -58,6 +58,7 @@ function pushHostContainer(fiber: Fiber, nextRootInstance: Container) {
   // So we push an empty value first. This lets us safely unwind on errors.
   push(contextStackCursor, NO_CONTEXT, fiber);
   const nextRootContext = getRootHostContext(nextRootInstance);
+  console.warn('nextRootContext', nextRootContext)
   // Now that we know this function doesn't throw, replace it.
   pop(contextStackCursor, fiber);
   push(contextStackCursor, nextRootContext, fiber);
