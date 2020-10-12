@@ -2857,8 +2857,8 @@ let didWarnAboutUnmockedScheduler = false;
 export function warnIfUnmockedScheduler(fiber: Fiber) {
   if (__DEV__) {
     if (
-      didWarnAboutUnmockedScheduler === false &&
-      Scheduler.unstable_flushAllWithoutAsserting === undefined
+      didWarnAboutUnmockedScheduler === false
+      // && Scheduler.unstable_flushAllWithoutAsserting === undefined
     ) {
       if (fiber.mode & BatchedMode || fiber.mode & ConcurrentMode) {
         didWarnAboutUnmockedScheduler = true;
