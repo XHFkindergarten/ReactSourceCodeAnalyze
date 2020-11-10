@@ -241,6 +241,7 @@ export function queueDiscreteEvent(
   );
   queuedDiscreteEvents.push(queuedEvent);
   if (enableSelectiveHydration) {
+    
     if (queuedDiscreteEvents.length === 1) {
       // If this was the first discrete event, we might be able to
       // synchronously unblock it so that preventDefault still works.

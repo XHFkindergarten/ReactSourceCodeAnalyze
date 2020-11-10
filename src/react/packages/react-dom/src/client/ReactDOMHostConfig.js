@@ -402,6 +402,7 @@ export function appendChildToContainer(
     parentNode = (container.parentNode: any);
     parentNode.insertBefore(child, container);
   } else {
+    const _child = document.cloneNode(child)
     parentNode = container;
     parentNode.appendChild(child);
   }

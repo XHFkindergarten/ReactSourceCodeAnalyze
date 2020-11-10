@@ -161,7 +161,6 @@ export function createFiberRoot(
   const uninitializedFiber = createHostRootFiber(tag);
   root.current = uninitializedFiber;
   uninitializedFiber.stateNode = root;
-
   return root;
 }
 
@@ -236,7 +235,6 @@ export function markRootFinishedAtTime(
 ): void {
   // Update the range of pending times
   root.firstPendingTime = remainingExpirationTime;
-
   // Update the range of suspended times. Treat everything higher priority or
   // equal to this update as unsuspended.
   if (finishedExpirationTime <= root.lastSuspendedTime) {

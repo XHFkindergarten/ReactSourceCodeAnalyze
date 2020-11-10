@@ -902,7 +902,6 @@ function pushHostRootContext(workInProgress) {
     // Should always be set
     pushTopLevelContextObject(workInProgress, root.context, false);
   }
-  console.warn('containerInfo', root.containerInfo)
   pushHostContainer(workInProgress, root.containerInfo);
 }
 
@@ -1254,7 +1253,6 @@ function mountIndeterminateComponent(
 
   prepareToReadContext(workInProgress, renderExpirationTime);
   let value;
-
   if (__DEV__) {
     if (
       Component.prototype &&
@@ -2801,7 +2799,6 @@ function beginWork(
   renderExpirationTime: ExpirationTime,
 ): Fiber | null {
   const updateExpirationTime = workInProgress.expirationTime;
-
   if (__DEV__) {
     if (workInProgress._debugNeedsRemount && current !== null) {
       // This will restart the begin phase with a new fiber.
@@ -2992,6 +2989,7 @@ function beginWork(
           }
         }
       }
+      console.warn('bailoutOnAlreadyFinishedWork')
       return bailoutOnAlreadyFinishedWork(
         current,
         workInProgress,
@@ -3010,7 +3008,6 @@ function beginWork(
 
   // Before entering the begin phase, clear the expiration time.
   workInProgress.expirationTime = NoWork;
-
   switch (workInProgress.tag) {
     case IndeterminateComponent: {
       return mountIndeterminateComponent(

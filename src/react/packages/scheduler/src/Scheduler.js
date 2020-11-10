@@ -228,7 +228,6 @@ function flushWork(hasTimeRemaining, initialTime) {
   if (enableSchedulerDebugging && isSchedulerPaused) {
     return;
   }
-
   // We'll need a host callback the next time work is scheduled.
   isHostCallbackScheduled = false;
   if (isHostTimeoutScheduled) {

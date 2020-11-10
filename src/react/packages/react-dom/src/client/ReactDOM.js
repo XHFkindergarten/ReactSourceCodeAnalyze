@@ -598,6 +598,7 @@ function legacyRenderSubtreeIntoContainer(
         originalCallback.call(instance);
       };
     }
+    const a = root._internalRoot.current.alternate
     // 初次挂载是不应该batch的
     unbatchedUpdates(() => {
       updateContainer(children, fiberRoot, parentComponent, callback);

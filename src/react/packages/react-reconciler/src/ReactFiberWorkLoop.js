@@ -444,7 +444,8 @@ export function scheduleUpdateOnFiber(
     // This is the result of a discrete event. Track the lowest priority
     // discrete update per root so we can flush them early, if needed.
     if (rootsWithPendingDiscreteUpdates === null) {
-      rootsWithPendingDiscreteUpdates = new Map([[root, expirationTime]]);
+      // rootsWithPendingDiscreteUpdates = new Map([[root, expirationTime]]);
+      rootsWithPendingDiscreteUpdates = null
     } else {
       const lastDiscreteTime = rootsWithPendingDiscreteUpdates.get(root);
       if (lastDiscreteTime === undefined || lastDiscreteTime > expirationTime) {
@@ -532,7 +533,6 @@ function getNextRootExpirationTimeToWorkOn(root: FiberRoot): ExpirationTime {
   // Determines the next expiration time that the root should render, taking
   // into account levels that may be suspended, or levels that may have
   // received a ping.
-
   const lastExpiredTime = root.lastExpiredTime;
   if (lastExpiredTime !== NoWork) {
     return lastExpiredTime;
@@ -775,7 +775,7 @@ function finishConcurrentRender(
       markRootSuspendedAtTime(root, expirationTime);
       const lastSuspendedTime = root.lastSuspendedTime;
       if (expirationTime === lastSuspendedTime) {
-        root.nextKnownPendingLevel = getRemainingExpirationTime(finishedWork);
+        root.nextKnownPendingLevel = react-dom/src/client/ReactDOMHostConfigemainingExpirationTime(finishedWork);
       }
       flushSuspensePriorityWarningInDEV();
 
@@ -1028,10 +1028,8 @@ function performSyncWorkOnRoot(root) {
       const prevDispatcher = pushDispatcher(root);
       const prevInteractions = pushInteractions(root);
       startWorkLoopTimer(workInProgress);
-
       do {
         try {
-          //
           workLoopSync();
           break;
         } catch (thrownValue) {
@@ -1507,9 +1505,13 @@ function inferTimeFromExpirationTimeWithSuspenseConfig(
 // The work loop is an extremely hot path. Tell Closure not to inline it.
 /** @noinline */
 function workLoopSync() {
+  let temp
   // Already timed out, so perform work without checking if we need to yield.
   while (workInProgress !== null) {
     workInProgress = performUnitOfWork(workInProgress);
+    // 当reconcile过程结束之后
+    // 在completeWork中fiber向上冒泡最终到达RootFiber
+    // workInProgress为null
   }
 }
 
@@ -1525,11 +1527,7 @@ function workLoopConcurrent() {
 function performUnitOfWork(unitOfWork: Fiber): Fiber | null {
   // 当前暴露出来的是这个alternate对象，理想情况下不需要依赖这个对象，但是通过使用它
   // 意味着我们不需要在diff过程中再创建一个额外的变量（field)
-  // The current, flushed, state of this fiber is the alternate. Ideally
-  // nothing should rely on this, but relying on it here means that we don't
-  // need an additional field on the work in progress.
   const current = unitOfWork.alternate;
-
   startWorkTimer(unitOfWork);
   setCurrentDebugFiberInDEV(unitOfWork);
 
@@ -1568,6 +1566,7 @@ function completeUnitOfWork(unitOfWork: Fiber): Fiber | null {
     if ((workInProgress.effectTag & Incomplete) === NoEffect) {
       setCurrentDebugFiberInDEV(workInProgress);
       let next;
+
       if (
         !enableProfilerTimer ||
         (workInProgress.mode & ProfileMode) === NoMode
@@ -1587,7 +1586,6 @@ function completeUnitOfWork(unitOfWork: Fiber): Fiber | null {
         // Completing this fiber spawned new work. Work on that next.
         return next;
       }
-
       if (
         returnFiber !== null &&
         // Do not append effects to parents if a sibling failed to complete
@@ -1772,6 +1770,7 @@ function commitRoot(root) {
 }
 
 function commitRootImpl(root, renderPriorityLevel) {
+  const _ = root.current.alternate.child
   // 刷新被动的effects
   flushPassiveEffects();
   flushRenderPhaseStrictModeWarningsInDEV();
@@ -1779,7 +1778,6 @@ function commitRootImpl(root, renderPriorityLevel) {
     (executionContext & (RenderContext | CommitContext)) === NoContext,
     'Should not already be working.',
   );
-
   const finishedWork = root.finishedWork;
   const expirationTime = root.finishedExpirationTime;
   if (finishedWork === null) {
@@ -1924,7 +1922,6 @@ function commitRootImpl(root, renderPriorityLevel) {
     // componentWillUnmount, but before the layout phase, so that the finished
     // work is current during componentDidMount/Update.
     root.current = finishedWork;
-
     // The next phase is the layout phase, where we call effects that read
     // the host tree after it's been mutated. The idiomatic use case for this is
     // layout, but class component lifecycles also fire here for legacy reasons.

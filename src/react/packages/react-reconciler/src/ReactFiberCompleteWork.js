@@ -635,7 +635,6 @@ function completeWork(
   renderExpirationTime: ExpirationTime,
 ): Fiber | null {
   const newProps = workInProgress.pendingProps;
-
   switch (workInProgress.tag) {
     case IndeterminateComponent:
       break;
@@ -745,12 +744,10 @@ function completeWork(
             currentHostContext,
             workInProgress,
           );
-
           appendAllChildren(instance, workInProgress, false, false);
-
+          
           // This needs to be set before we mount Flare event listeners
           workInProgress.stateNode = instance;
-
           if (enableFlareAPI) {
             const listeners = newProps.listeners;
             if (listeners != null) {
@@ -786,6 +783,7 @@ function completeWork(
       break;
     }
     case HostText: {
+      console.warn('HostText')
       let newText = newProps;
       if (current && workInProgress.stateNode != null) {
         const oldText = current.memoizedProps;
@@ -1290,7 +1288,6 @@ function completeWork(
         workInProgress.tag,
       );
   }
-
   return null;
 }
 

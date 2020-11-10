@@ -695,6 +695,8 @@ export function diffProperties(
   let styleName;
   let styleUpdates = null;
   for (propKey in lastProps) {
+    console.warn('lastProps', lastProps)
+    console.warn('nextProps', nextProps)
     if (
       nextProps.hasOwnProperty(propKey) ||
       !lastProps.hasOwnProperty(propKey) ||

@@ -14,7 +14,6 @@ import {
   unsafeCastDOMTopLevelTypeToString,
 } from 'legacy-events/TopLevelEventTypes';
 import getVendorPrefixedEventName from './getVendorPrefixedEventName';
-
 /**
  * To identify top level events in ReactDOM, we use constants defined by this
  * module. This is the only module that uses the unsafe* methods to express

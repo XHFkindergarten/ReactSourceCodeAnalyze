@@ -2540,6 +2540,7 @@ export function attach(
           overrideProps(fiber, path, value);
         }
       } else {
+        console.warn('shot0')
         fiber.pendingProps = copyWithSet(instance.props, path, value);
         instance.forceUpdate();
       }

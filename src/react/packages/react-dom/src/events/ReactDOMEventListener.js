@@ -150,7 +150,6 @@ function releaseTopLevelCallbackBookKeeping(
 
 function handleTopLevel(bookKeeping: BookKeepingInstance) {
   let targetInst = bookKeeping.targetInst;
-
   // Loop through the hierarchy, in case there's any nested components.
   // It's important that we build the array of ancestors before calling any
   // event handlers, because event handlers can modify the DOM, leading to
@@ -172,7 +171,6 @@ function handleTopLevel(bookKeeping: BookKeepingInstance) {
     }
     ancestor = getClosestInstanceFromNode(root);
   } while (ancestor);
-
   for (let i = 0; i < bookKeeping.ancestors.length; i++) {
     targetInst = bookKeeping.ancestors[i];
     const eventTarget = getEventTarget(bookKeeping.nativeEvent);
@@ -279,7 +277,6 @@ function trapEventForPluginEventSystem(
       listener = dispatchEvent.bind(null, topLevelType, PLUGIN_EVENT_SYSTEM);
       break;
   }
-
   const rawEventName = getRawEventName(topLevelType);
   if (capture) {
     addEventCaptureListener(element, rawEventName, listener);
@@ -425,7 +422,6 @@ export function attemptToDispatchEvent(
 
   const nativeEventTarget = getEventTarget(nativeEvent);
   let targetInst = getClosestInstanceFromNode(nativeEventTarget);
-
   if (targetInst !== null) {
     let nearestMounted = getNearestMountedFiber(targetInst);
     if (nearestMounted === null) {

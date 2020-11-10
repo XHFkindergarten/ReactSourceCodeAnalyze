@@ -492,7 +492,6 @@ export function createWorkInProgress(
         break;
     }
   }
-
   return workInProgress;
 }
 

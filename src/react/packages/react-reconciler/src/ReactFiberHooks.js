@@ -422,7 +422,6 @@ export function renderWithHooks(
         ? HooksDispatcherOnMount
         : HooksDispatcherOnUpdate;
   }
-
   let children = Component(props, refOrContext);
 
   if (didScheduleRenderPhaseUpdate) {
@@ -462,9 +461,9 @@ export function renderWithHooks(
   // We can assume the previous dispatcher is always this one, since we set it
   // at the beginning of the render phase and there's no re-entrancy.
   ReactCurrentDispatcher.current = ContextOnlyDispatcher;
-
+  
   const renderedWork: Fiber = (currentlyRenderingFiber: any);
-
+  
   renderedWork.memoizedState = firstWorkInProgressHook;
   renderedWork.expirationTime = remainingExpirationTime;
   renderedWork.updateQueue = (componentUpdateQueue: any);
@@ -508,7 +507,6 @@ export function renderWithHooks(
     'Rendered fewer hooks than expected. This may be caused by an accidental ' +
       'early return statement.',
   );
-
   return children;
 }
 

@@ -131,7 +131,6 @@ export function listenTo(
 ): void {
   const listeningSet = getListeningSetForElement(mountAt);
   const dependencies = registrationNameDependencies[registrationName];
-
   for (let i = 0; i < dependencies.length; i++) {
     const dependency = dependencies[i];
     listenToTopLevel(dependency, mountAt, listeningSet);
